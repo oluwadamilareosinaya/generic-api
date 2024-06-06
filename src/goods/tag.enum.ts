@@ -1,0 +1,6 @@
+export enum Tag {
+  SOLID = 'SOLID',
+  LIQUID = 'LIQUID',
+  FRAGILE = 'FRAGILE',
+  PERISHABLE = 'PERISHABLE',
+}
