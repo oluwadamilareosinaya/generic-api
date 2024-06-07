@@ -1,12 +1,18 @@
 import { DataSource, Repository } from 'typeorm';
 import { Good } from './good.entity';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { CreateGoodDto } from './dto/create-good.dto';
 import { FilterGoodDto } from './dto/filter-good.dto';
 import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class GoodRepository extends Repository<Good> {
+  private logger = new Logger('GoodsRepository');
   constructor(private dataSource: DataSource) {
     super(Good, dataSource.createEntityManager());
   }
@@ -28,8 +34,16 @@ export class GoodRepository extends Repository<Good> {
       );
     }
 
-    const good = query.getMany();
-    return good;
+    try {
+      const good = query.getMany();
+      return good;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get goods for userId "${user.id}", Filters "${JSON.stringify(filterGoodDto)}"`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 
   async createGood(createGoodDto: CreateGoodDto, user: User): Promise<Good> {

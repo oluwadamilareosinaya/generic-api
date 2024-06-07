@@ -4,9 +4,10 @@ import { GoodsController } from './goods.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Good } from './good.entity';
 import { GoodRepository } from './good.repository';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Good])],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Good])],
   providers: [GoodsService, GoodRepository],
   controllers: [GoodsController],
 })
