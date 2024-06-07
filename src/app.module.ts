@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { GoodsModule } from './goods/goods.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JobsModule } from './jobs/jobs.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    GoodsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -16,7 +16,9 @@ import { JobsModule } from './jobs/jobs.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    GoodsModule,
     JobsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

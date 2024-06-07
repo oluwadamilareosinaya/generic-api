@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Tag } from './tag.enum';
+import { User } from 'src/auth/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Good {
@@ -17,4 +19,8 @@ export class Good {
 
   @Column()
   tag: Tag;
+
+  @ManyToOne((_type) => User, (user) => user.goods, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  user: User;
 }

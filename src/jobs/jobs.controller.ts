@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
@@ -14,8 +15,10 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { Job } from './job.entity';
 import { FilterJobDto } from './dto/filter-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('jobs')
+@UseGuards(AuthGuard())
 export class JobsController {
   constructor(private jobsService: JobsService) {}
 
