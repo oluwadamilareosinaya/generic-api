@@ -16,10 +16,9 @@ import { FilterGoodDto } from './dto/filter-good.dto';
 import { UpdateGoodDto } from './dto/update-good.dto';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
-import { AuthGuard } from '@nestjs/passport';
+import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 
 @Controller('goods')
-@UseGuards(AuthGuard('jwt'))
 export class GoodsController {
   constructor(private goodsService: GoodsService) {}
 
@@ -31,11 +30,13 @@ export class GoodsController {
     return this.goodsService.getGoods(filterGoodDto, user);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('/:id')
   getGoodById(@Param('id') id: string, @GetUser() user: User): Promise<Good> {
     return this.goodsService.getGoodById(id, user);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Post()
   createGood(
     @Body() createGoodDto: CreateGoodDto,
@@ -44,6 +45,7 @@ export class GoodsController {
     return this.goodsService.createGood(createGoodDto, user);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Patch('/:id')
   updateGood(
     @Param('id') id: string,
@@ -53,6 +55,7 @@ export class GoodsController {
     return this.goodsService.updateGood(id, updateGoodDto, user);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Delete('/:id')
   deleteGood(@Param('id') id: string, @GetUser() user: User): Promise<void> {
     return this.goodsService.deleteGood(id, user);
