@@ -1,19 +1,26 @@
 import { DataSource, Repository } from 'typeorm';
 import { Job } from './job.entity';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { FilterJobDto } from './dto/filter-job.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class JobsRespository extends Repository<Job> {
+  private logger = new Logger('JobsRespository');
   constructor(private dataSource: DataSource) {
     super(Job, dataSource.createEntityManager());
   }
 
-  async getJobs(filterJObDto: FilterJobDto): Promise<Job[]> {
+  async getJobs(filterJObDto: FilterJobDto, user: User): Promise<Job[]> {
     const { search, employment_type, location, industry } = filterJObDto;
 
     const query = this.createQueryBuilder('job');
+    query.where({ user });
 
     if (employment_type) {
       query.andWhere('job.employment_type = :employment_type', {
@@ -40,8 +47,16 @@ export class JobsRespository extends Repository<Job> {
       );
     }
 
-    const jobs = query.getMany();
-    return jobs;
+    try {
+      const jobs = query.getMany();
+      return jobs;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get jobs for userId "${user.id}", Filters "${JSON.stringify(filterJObDto)}"`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 
   async createJob(createJobDto: CreateJobDto): Promise<Job> {

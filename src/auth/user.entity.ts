@@ -1,4 +1,5 @@
 import { Good } from 'src/goods/good.entity';
+import { Job } from 'src/jobs/job.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -26,4 +27,10 @@ export class User {
     nullable: true,
   })
   goods: Good[];
+
+  @OneToMany((_type) => Job, (jobs) => jobs.user, {
+    eager: true,
+    nullable: true,
+  })
+  jobs: Job[];
 }

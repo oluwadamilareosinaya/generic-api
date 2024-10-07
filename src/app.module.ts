@@ -5,6 +5,7 @@ import { JobsModule } from './jobs/jobs.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { configValidationSchema } from './config.schema';
     GoodsModule,
     JobsModule,
     AuthModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],

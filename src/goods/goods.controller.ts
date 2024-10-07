@@ -22,6 +22,7 @@ import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
 export class GoodsController {
   constructor(private goodsService: GoodsService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Get()
   getGoods(
     @Query() filterGoodDto: FilterGoodDto,

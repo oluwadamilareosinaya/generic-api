@@ -16,22 +16,30 @@ import { Job } from './job.entity';
 import { FilterJobDto } from './dto/filter-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { AccessTokenGuard } from 'src/auth/guards/accessToken.guard';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('jobs')
-@UseGuards(AuthGuard())
 export class JobsController {
   constructor(private jobsService: JobsService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Get()
-  async getJobs(@Query() filterJObDto: FilterJobDto): Promise<Job[]> {
-    return this.jobsService.getJobs(filterJObDto);
+  async getJobs(
+    @Query() filterJObDto: FilterJobDto,
+    @GetUser() user: User,
+  ): Promise<Job[]> {
+    return this.jobsService.getJobs(filterJObDto, user);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('/:id')
   async getJobById(@Param('id') id: string): Promise<Job> {
     return this.jobsService.getJobById(id);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Post()
   async createJob(
     @Body(ValidationPipe) createJobDto: CreateJobDto,
@@ -39,6 +47,7 @@ export class JobsController {
     return this.jobsService.createJob(createJobDto);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Patch('/:id')
   async updateJob(
     @Param('id') id: string,
@@ -47,6 +56,7 @@ export class JobsController {
     return this.jobsService.updateJob(id, updateJobDto);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Delete('/:id')
   async deleteJob(@Param('id') id: string): Promise<void> {
     return this.jobsService.deleteJob(id);

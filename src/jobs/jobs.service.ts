@@ -4,13 +4,14 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { Job } from './job.entity';
 import { FilterJobDto } from './dto/filter-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class JobsService {
   constructor(private readonly jobsRepository: JobsRespository) {}
 
-  async getJobs(filterJobDto: FilterJobDto): Promise<Job[]> {
-    const jobs = await this.jobsRepository.getJobs(filterJobDto);
+  async getJobs(filterJobDto: FilterJobDto, user: User): Promise<Job[]> {
+    const jobs = await this.jobsRepository.getJobs(filterJobDto, user);
     return jobs;
   }
 
